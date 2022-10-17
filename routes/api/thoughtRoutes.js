@@ -94,8 +94,45 @@ const deleteThought = async (req, res) => {
     }
 };
 
+// POST reaction
+const createReaction = async (req, res) => {
+    try {
+        const thought = await Thought.findOneAndUpdate(
+            { _id: req.params.thoughtId },
+            { $addToSet: { reactions: {
+                reactionText: req.body.reactionText,
+                author: req.body.author
+            }}},
+            { new: true }
+        );
 
+        return res.status(200).json(thought);
+    } catch (err) {
+        console.log('Error', err);
+        res.status(500).json(err);
+    }
+};
 
+// delete reaction
+const deleteReaction = async (req, res) => {
+    try {
+        const thought = await Thought.findOneAndUpdate(
+            { _id: req.params.thoughtId },
+            { $pull: { reactions: { _id: req.params.reactionId }}},
+            { runValidators: true, new: true }
+        )
+        .select('-__v');
+
+        if (!thought) {
+            return res.status(404).json({ message: 'No thought found '})
+        }
+
+        return res.status(200).json(thought);
+    } catch (err) {
+        console.log('Error', err);
+        res.status(500).json(err);
+    }
+};
 
 // /api/thoughts
 router
@@ -110,4 +147,14 @@ router
     .put(updateThought)
     .delete(deleteThought);
 
+// /api/thoughts/:thoughtId/reactions
+router
+    .route('/:thoughtId/reactions')
+    .post(createReaction);
+
+// /api/thoughts/:thoughtId/reactions/:reactionId
+router
+    .route('/:thoughtId/reactions/:reactionId')
+    .delete(deleteReaction);
+    
 module.exports = router;
