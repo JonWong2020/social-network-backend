@@ -42,5 +42,37 @@ const createNewUser = async (req, res) => {
 };
 
 // update user
+const updateUser = async (req, res) => {
+    try {
+        const user = await User.findOneAndUpdate(
+            { _id: req.params.id },
+            { $set: req.body },
+            { runValidators: true, new: true }
+        );
+
+        if (!user) {
+            return res.status(404).json({ message: 'No user with that ID '})
+        }
+
+        return res.status(200).json(user);
+    } catch (err) {
+        console.log('Error', err);
+        res.status(500).json(err);
+    }
+};
 
 // delete user
+const deleteUser = async (req, res) => {
+    try {
+        const user = await User.findOneAndDelete({ _id: req.params.id });
+
+        if (!user) {
+            return res.status(404).json({ message: 'No user with that ID '})
+        }
+
+        return res.status(200).json(user);
+    } catch (err) {
+        console.log('Error', err);
+        res.status(500).json(err);
+    }
+};
