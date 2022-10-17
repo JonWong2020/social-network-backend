@@ -30,6 +30,16 @@ const getSingleUser = async (req, res) => {
     }
 };
 // create new user
+const createNewUser = async (req, res) => {
+    try {
+        const newUser = await User.create(req.body);
+
+        return res.json(newUser);
+    } catch (err) {
+        console.log('Error', err);
+        res.status(500).json(err);
+    }
+};
 
 // update user
 
