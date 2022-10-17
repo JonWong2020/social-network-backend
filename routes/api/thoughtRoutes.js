@@ -52,6 +52,51 @@ const createThought = async (req, res) => {
     }
 };
 
+// PUT/update thought
+const updateThought = async (req, res) => {
+    try {
+        const thought = await Thought.findOneAndUpdate(
+            { _id: req.params.id },
+            { $set: req.body },
+            { runValidators: true, new: true }
+        );
+
+        if (!thought) {
+            return res.status(404).json({ message: 'No thought with that ID '})
+        }
+
+        return res.status(200).json(thought);
+    } catch (err) {
+        console.log('Error', err);
+        res.status(500).json(err);
+    }
+};
+
+// delete thought
+const deleteThought = async (req, res) => {
+    try {
+        const thought = await Thought.findOneAndDelete({ _id: req.params.id });
+
+        if (!thought) {
+            return res.status(404).json({ message: 'No thought with that ID '})
+        }
+
+        await User.findOneAndUpdate(
+            { username: thought.author },
+            { $pull: { thoughts: thought_id }},
+            { runValidators: true, new: true }
+        );
+
+        return res.status(200).json({ message: 'Thought Deleted', thoughtDeleted: thought });
+    } catch (err) {
+        console.log('Error', err);
+        res.status(500).json(err);
+    }
+};
+
+
+
+
 // /api/thoughts
 router
     .route('/')
@@ -62,5 +107,7 @@ router
 router
     .route('/:id')
     .get(getSingleThought)
+    .put(updateThought)
+    .delete(deleteThought);
 
 module.exports = router;
