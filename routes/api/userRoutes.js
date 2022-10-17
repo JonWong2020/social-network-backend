@@ -76,3 +76,18 @@ const deleteUser = async (req, res) => {
         res.status(500).json(err);
     }
 };
+
+// /api/users
+router
+    .route('/')
+    .get(getAllUsers)
+    .post(createNewUser)
+
+// /api/users/:id
+router
+    .route('/:id')
+    .get(getSingleUser)
+    .put(updateUser)
+    .delete(deleteUser)
+
+module.exports = router;
