@@ -103,7 +103,7 @@ const deleteFriend = async (req, res) => {
     try {
         const user = await User.findOneAndUpdate(
             { _id: req.params.id },
-            { $push: { friends: req.params.friendId }},
+            { $pull: { friends: req.params.friendId }},
             { new: true }
         )
         .select('__v');
