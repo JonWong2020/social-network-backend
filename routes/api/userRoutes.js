@@ -77,6 +77,48 @@ const deleteUser = async (req, res) => {
     }
 };
 
+// add a friend
+const addFriend = async (req, res) => {
+    try {
+        const user = await User.findOneAndUpdate(
+            { _id: req.params.id },
+            { $push: { friends: req.params.friendId }},
+            { new: true }
+        )
+        .select('__v');
+
+        if (!user) {
+            return res.status(404).json({ message: 'No user with that ID '})
+        }
+
+        return res.status(200).json(user);
+    } catch (err) {
+        console.log('Error', err);
+        res.status(500).json(err);
+    }
+};
+
+// delete a friend
+const deleteFriend = async (req, res) => {
+    try {
+        const user = await User.findOneAndUpdate(
+            { _id: req.params.id },
+            { $push: { friends: req.params.friendId }},
+            { new: true }
+        )
+        .select('__v');
+
+        if (!user) {
+            return res.status(404).json({ message: 'No user with that ID '})
+        }
+
+        return res.status(200).json(user);
+    } catch (err) {
+        console.log('Error', err);
+        res.status(500).json(err);
+    }
+};
+
 // /api/users
 router
     .route('/')
@@ -89,5 +131,11 @@ router
     .get(getSingleUser)
     .put(updateUser)
     .delete(deleteUser)
+
+// /api/users/:id/friends/:friendId
+router
+    .route(':id/friends/:friendId')
+    .post(addFriend)
+    .delete(deleteFriend)
 
 module.exports = router;
