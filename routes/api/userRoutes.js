@@ -82,10 +82,9 @@ const addFriend = async (req, res) => {
     try {
         const user = await User.findOneAndUpdate(
             { _id: req.params.id },
-            { $push: { friends: req.params.friendId }},
+            { $addToSet: { friends: req.params.friendId }},
             { new: true }
         )
-        .select('__v');
 
         if (!user) {
             return res.status(404).json({ message: 'No user with that ID '})
@@ -106,7 +105,6 @@ const deleteFriend = async (req, res) => {
             { $pull: { friends: req.params.friendId }},
             { new: true }
         )
-        .select('__v');
 
         if (!user) {
             return res.status(404).json({ message: 'No user with that ID '})
