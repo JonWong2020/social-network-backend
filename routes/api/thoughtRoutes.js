@@ -36,13 +36,13 @@ const getSingleThought = async (req, res) => {
 const createThought = async (req, res) => {
     try {
         const user = await User.findOneAndUpdate(
-            { username: req.body.author },
+            { username: req.body.username },
             { $push: { thoughts: (await Thought.create(req.body))._id }},
             { runValidators: true, new: true }
         );
 
         if (!user) {
-            return res.status(404).json({ message: 'No user with that ID '})
+            return res.status(404).json({ message: 'No thought with that ID '})
         }
 
         return res.status(200).json(user);
@@ -82,8 +82,8 @@ const deleteThought = async (req, res) => {
         }
 
         await User.findOneAndUpdate(
-            { username: thought.author },
-            { $pull: { thoughts: thought_id }},
+            { username: thought.username },
+            { $pull: { thoughts: thought._id }},
             { runValidators: true, new: true }
         );
 
@@ -101,7 +101,7 @@ const createReaction = async (req, res) => {
             { _id: req.params.thoughtId },
             { $addToSet: { reactions: {
                 reactionText: req.body.reactionText,
-                author: req.body.author
+                username: req.body.username
             }}},
             { new: true }
         );
