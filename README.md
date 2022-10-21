@@ -33,9 +33,9 @@
   
   ## Links 
   
-  * Repo:  https://github.com/JonWong2020/tech-blog-CMS/
+  * Repo:  https://github.com/JonWong2020/social-network-backend
 
-  * Demo:  
+  * Demo:  https://drive.google.com/file/d/1LWPR8c_CAwgcOK3iLaI_xRJ2FLwBcR7O/view
 
   ## Questions
   Have questions about this project?  
